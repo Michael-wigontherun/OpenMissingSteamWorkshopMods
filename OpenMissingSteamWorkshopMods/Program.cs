@@ -11,7 +11,6 @@ namespace OpenMissingSteamWorkshopMods
             Console.WriteLine("Hello, World!");
 
             StellarisJson stellarisJson = new();
-            HashSet<string> installedWorkshopMods = new(StringComparer.OrdinalIgnoreCase);
 
             if (args.Length > 1)
             {
@@ -33,23 +32,6 @@ namespace OpenMissingSteamWorkshopMods
                 return;
             }
 
-            //Get installed Workshop mods
-            foreach(string modFolderPath in Directory.GetDirectories(args[1]))
-            {
-                string path = Path.Combine(modFolderPath, "descriptor.mod");
-                if (!File.Exists(path)) continue;
-
-                foreach(string line in File.ReadAllLines(path))
-                {
-                    if(!line.Contains("remote_file_id", StringComparison.OrdinalIgnoreCase)) continue;
-                    string l = line.Replace("remote_file_id", "", StringComparison.OrdinalIgnoreCase);
-                    
-                    l = l.Replace("=", "", StringComparison.OrdinalIgnoreCase);
-                    l = l.Replace("\"", "", StringComparison.OrdinalIgnoreCase);
-                    installedWorkshopMods.Add(l);
-                }
-            }
-
             Console.WriteLine("Control + click on ID to open the workshop link then press enter to get the next one.");
             Console.WriteLine("To skip console enter s and press enter");
             bool skipConsole = false;
@@ -58,7 +40,7 @@ namespace OpenMissingSteamWorkshopMods
 
             foreach (StellarisJsonMod stellarisJsonMod in stellarisJson.mods)
             {
-                if(installedWorkshopMods.Contains(stellarisJsonMod.steamId)) continue;
+                if(Directory.Exists(Path.Combine(args[1], stellarisJsonMod.steamId))) continue;
 
                 outputFile.Add(stellarisJsonMod.GetLinkFileLine());
 
@@ -71,7 +53,6 @@ namespace OpenMissingSteamWorkshopMods
                 ClearPreviousLine();//Clear Enter
                 ClearPreviousLine();//Clear prev link
             }
-
 
             File.WriteAllLines(GetOutputFilePath(Path.GetFileNameWithoutExtension(args[0])), outputFile);
 
