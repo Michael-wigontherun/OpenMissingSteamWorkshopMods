@@ -99,7 +99,7 @@ namespace OpenMissingSteamWorkshopMods
 
         static void Help()
         {
-            Console.WriteLine("This program requires atleast two paramater to run.");
+            Console.WriteLine("This Consol Application requires atleast two paramater to run.");
             Console.WriteLine("param 1 : stellaris playlist json path");
             Console.WriteLine("Example : \"C:\\Users\\[user]\\Desktop\\Everything_but_a_salad.json\"");
             Console.WriteLine();
